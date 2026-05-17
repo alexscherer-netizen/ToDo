@@ -861,8 +861,38 @@ document.getElementById('gt-title').addEventListener('keydown',e=>{if(e.key==='E
 document.getElementById('gs-name').addEventListener('keydown',e=>{if(e.key==='Enter')addGShop();});
 document.getElementById('g-code').addEventListener('input',e=>{e.target.value=e.target.value.toUpperCase();});
 
-// Beim Laden: gespeicherte Session wiederherstellen
-initApp();
+// E-Mail-Bestätigung: Token aus URL-Hash abfangen
+async function handleEmailConfirm(){
+  const hash=window.location.hash;
+  if(!hash)return false;
+  const params=new URLSearchParams(hash.replace('#',''));
+  const accessToken=params.get('access_token');
+  const refreshToken=params.get('refresh_token');
+  const type=params.get('type');
+  if(!accessToken)return false;
+  // Hash aus der URL entfernen
+  history.replaceState(null,'',window.location.pathname+window.location.search);
+  try{
+    const userRes=await req('/auth/v1/user','GET',null,accessToken);
+    sess={access_token:accessToken,refresh_token:refreshToken,user:userRes};
+    saveSession(sess);
+    await loadProf();
+    if(type==='signup'){
+      // Neuer Nutzer: Nutzername noch nicht gesetzt
+      showApp();
+      setTimeout(()=>{appOk('✓ E-Mail bestätigt! Bitte Nutzernamen wählen.');openProfile();},600);
+    } else {
+      showApp();
+    }
+    return true;
+  }catch(e){return false;}
+}
+
+// Beim Laden: erst E-Mail-Bestätigung prüfen, dann gespeicherte Session
+(async()=>{
+  const confirmed=await handleEmailConfirm();
+  if(!confirmed) await initApp();
+})();
 </script>
 </body>
 </html>
