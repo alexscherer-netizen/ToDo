@@ -211,6 +211,7 @@ input[type="file"] { display: none; }
 .notif.done-notif  { border-left: 3px solid var(--accent); }
 .notif.del-notif   { border-left: 3px solid var(--danger); }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -874,6 +875,90 @@ function rGShop(){
 }
 
 // LIGHTBOX
+
+// ── REALTIME ─────────────────────────────────────────────────────
+let realtimeClient = null;
+let realtimeChannels = [];
+
+function startRealtime(){
+  if(!sess||!activeGroup) return;
+  stopRealtime();
+  if(typeof window.supabase === 'undefined'){ setTimeout(startRealtime, 500); return; }
+
+  realtimeClient = window.supabase.createClient(SB, KEY, {
+    global:{ headers:{ Authorization:'Bearer '+sess.access_token } },
+    realtime:{ params:{ apikey:KEY } }
+  });
+
+  const todoCh = realtimeClient
+    .channel('gt-'+activeGroup.id)
+    .on('postgres_changes',{ event:'*', schema:'public', table:'group_todos', filter:'group_id=eq.'+activeGroup.id },
+      (p)=>handleChange('todo',p))
+    .subscribe(s=>console.log('todos:',s));
+
+  const shopCh = realtimeClient
+    .channel('gs-'+activeGroup.id)
+    .on('postgres_changes',{ event:'*', schema:'public', table:'group_shopping_items', filter:'group_id=eq.'+activeGroup.id },
+      (p)=>handleChange('shop',p))
+    .subscribe(s=>console.log('shop:',s));
+
+  realtimeChannels=[todoCh,shopCh];
+}
+
+function stopRealtime(){
+  realtimeChannels.forEach(ch=>{try{ch.unsubscribe();}catch(_){}});
+  realtimeChannels=[];
+  if(realtimeClient){try{realtimeClient.removeAllChannels();}catch(_){}realtimeClient=null;}
+}
+
+function handleChange(type, payload){
+  const ev=payload.eventType;
+  const rec=payload.new||{};
+  const old=payload.old||{};
+  if(rec.user_id&&rec.user_id===sess.user.id) return;
+  const by=rec.created_by_username||rec.completed_by_username||'Jemand';
+  const name=rec.name||rec.title||'';
+  if(ev==='INSERT'){
+    if(type==='todo') showNotif('todo-notif','📝 Neue Aufgabe','"'+trunc(name)+'" von '+by,()=>{goPanel('group',document.getElementById('nav-group'));switchSubTab('gt');loadGTodos();});
+    else              showNotif('shop-notif','🛒 Neuer Artikel','"'+trunc(name)+'" von '+by,()=>{goPanel('group',document.getElementById('nav-group'));switchSubTab('gs');loadGShop();});
+    if(type==='todo') loadGTodos(); else loadGShop();
+  } else if(ev==='UPDATE'){
+    if(rec.completed&&!old.completed){
+      const db=rec.completed_by_username||by;
+      if(type==='todo') showNotif('done-notif','✅ Aufgabe erledigt','"'+trunc(name)+'" von '+db,()=>{goPanel('group',document.getElementById('nav-group'));switchSubTab('gt');loadGTodos();});
+      else              showNotif('done-notif','✅ Artikel erledigt','"'+trunc(name)+'" von '+db,()=>{goPanel('group',document.getElementById('nav-group'));switchSubTab('gs');loadGShop();});
+    }
+    if(type==='todo') loadGTodos(); else loadGShop();
+  } else if(ev==='DELETE'){
+    if(type==='todo') showNotif('del-notif','🗑 Aufgabe gelöscht','von '+by,()=>{loadGTodos();});
+    else              showNotif('del-notif','🗑 Artikel gelöscht','von '+by,()=>{loadGShop();});
+    if(type==='todo') loadGTodos(); else loadGShop();
+  }
+}
+
+function showNotif(type,title,sub,onClick){
+  const id='n_'+Date.now();
+  const stack=document.getElementById('notif-stack');
+  const el=document.createElement('div');
+  el.className='notif '+type; el.id=id;
+  const icon=type==='todo-notif'?'📝':type==='shop-notif'?'🛒':type==='done-notif'?'✅':'🗑';
+  el.innerHTML='<div class="notif-icon">'+icon+'</div><div class="notif-body"><div class="notif-title">'+title+'</div><div class="notif-sub">'+sub+'</div></div>';
+  const closeBtn=document.createElement('button');
+  closeBtn.className='notif-close'; closeBtn.textContent='✕';
+  closeBtn.onclick=function(e){e.stopPropagation();dismissNotif(id);};
+  el.appendChild(closeBtn);
+  el.addEventListener('click',()=>{dismissNotif(id);if(onClick)onClick();});
+  stack.appendChild(el);
+  notifTimers[id]=setTimeout(()=>dismissNotif(id),6000);
+}
+const notifTimers={};
+function dismissNotif(id){
+  clearTimeout(notifTimers[id]);
+  const el=document.getElementById(id); if(!el)return;
+  el.classList.add('out'); setTimeout(()=>el.remove(),250);
+}
+function trunc(s,n=30){return s&&s.length>n?s.slice(0,n)+'…':(s||'');}
+
 function openLB(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
 function closeLB(){document.getElementById('lightbox').classList.remove('open');}
 
