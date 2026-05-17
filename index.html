@@ -452,6 +452,7 @@ let authMode='login',activeGroup=null,refreshTmr=null,tokenRefreshTmr=null;
 let photos={s:null,gs:null};
 
 const SESS_KEY='listly_session';
+const GROUP_KEY='listly_active_group';
 
 async function req(path,method='GET',body=null,tok=null){
   const res=await fetch(SB+path,{method,headers:{'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+(tok||KEY),'Prefer':'return=representation'},body:body?JSON.stringify(body):undefined});
@@ -464,8 +465,10 @@ const api=(p,m='GET',b=null)=>req(p,m,b,sess.access_token);
 
 // Session speichern & laden
 function saveSession(s){ try{localStorage.setItem(SESS_KEY,JSON.stringify(s));}catch(_){} }
-function clearSession(){ try{localStorage.removeItem(SESS_KEY);}catch(_){} }
+function clearSession(){ try{localStorage.removeItem(SESS_KEY);localStorage.removeItem(GROUP_KEY);}catch(_){} }
 function loadSession(){ try{const s=localStorage.getItem(SESS_KEY);return s?JSON.parse(s):null;}catch(_){return null;} }
+function saveGroup(g){ try{localStorage.setItem(GROUP_KEY,JSON.stringify(g));}catch(_){} }
+function loadGroupCache(){ try{const g=localStorage.getItem(GROUP_KEY);return g?JSON.parse(g):null;}catch(_){return null;} }
 
 async function refreshToken(){
   if(!sess||!sess.refresh_token)return;
@@ -708,6 +711,25 @@ async function loadGroups(){
     groups=await api('/rest/v1/groups?id=in.('+ids+')&order=created_at.desc')||[];
     for(const g of groups){const m=await api('/rest/v1/group_members?group_id=eq.'+g.id+'&select=user_id')||[];g._mc=m.length;}
     rGroups();
+    // Gespeicherte aktive Gruppe wiederherstellen
+    const cached=loadGroupCache();
+    if(cached){
+      const found=groups.find(g=>g.id===cached.id);
+      if(found){
+        // Gruppe gefunden: Banner & Nav aktualisieren, Realtime starten
+        activeGroup=found;
+        saveGroup(found);
+        document.getElementById('nav-group-lbl').textContent=found.name.length>8?found.name.slice(0,8)+'…':found.name;
+        document.getElementById('group-banner').innerHTML=`
+          <div><div class="group-banner-name">👥 ${esc(found.name)}</div>
+          <div class="group-banner-sub">Code: <span class="code-pill" onclick="copyCode('${found.invite_code}')">${found.invite_code}</span> · ${found._mc||'?'} Mitglieder</div></div>
+          <button class="leave-btn" onclick="leaveGroup('${found.id}')">Verlassen</button>`;
+        startRealtime();
+      } else {
+        // Gruppe existiert nicht mehr (verlassen/gelöscht)
+        try{localStorage.removeItem(GROUP_KEY);}catch(_){}
+      }
+    }
   }catch(e){appErr(e.message);}
 }
 async function createGroup(){
@@ -729,12 +751,13 @@ async function leaveGroup(gid){
   if(!confirm('Gruppe wirklich verlassen?'))return;
   try{
     await api('/rest/v1/group_members?group_id=eq.'+gid+'&user_id=eq.'+sess.user.id,'DELETE');
-    if(activeGroup&&activeGroup.id===gid){activeGroup=null;stopRealtime();document.getElementById('nav-group-lbl').textContent='Gruppe';document.getElementById('group-banner').innerHTML='';goPanel('groups',document.getElementById('nav-groups'));}
+    if(activeGroup&&activeGroup.id===gid){activeGroup=null;stopRealtime();try{localStorage.removeItem(GROUP_KEY);}catch(_){}document.getElementById('nav-group-lbl').textContent='Gruppe';document.getElementById('group-banner').innerHTML='';goPanel('groups',document.getElementById('nav-groups'));}
     await loadGroups();
   }catch(e){appErr(e.message);}
 }
 function openGroup(g){
   activeGroup=g;
+  saveGroup(g);
   document.getElementById('nav-group-lbl').textContent=g.name.length>8?g.name.slice(0,8)+'…':g.name;
   
   document.getElementById('group-banner').innerHTML=`
