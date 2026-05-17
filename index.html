@@ -3,356 +3,172 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aufgaben – Todo App</title>
+<title>Meine App</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #f5f4f0;
-  --surface: #ffffff;
-  --surface2: #f0ede8;
-  --border: #e2ddd6;
-  --text: #1a1916;
-  --muted: #7a756e;
-  --accent: #2d6a4f;
-  --accent-light: #d8f3dc;
-  --danger: #c1121f;
-  --danger-light: #ffe0e0;
-  --warn: #9c6500;
-  --warn-light: #fff3cd;
-  --radius: 12px;
-  --radius-sm: 8px;
+  --bg: #f5f4f0; --surface: #ffffff; --border: #e2ddd6;
+  --text: #1a1916; --muted: #7a756e;
+  --green: #2d6a4f; --green-light: #d8f3dc;
+  --blue: #1a56a0; --blue-light: #dbeafe;
+  --purple: #5b21b6; --purple-light: #ede9fe;
+  --danger: #c1121f; --danger-light: #ffe0e0;
+  --warn: #9c6500; --warn-light: #fff3cd;
+  --radius: 12px; --radius-sm: 8px;
 }
 body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* ── AUTH SCREEN ── */
-.auth-screen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-.auth-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2rem;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-}
-.auth-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 1.75rem;
-}
-.auth-logo svg { width: 28px; height: 28px; color: var(--accent); }
-.auth-logo span { font-size: 20px; font-weight: 600; }
-.auth-tabs {
-  display: flex;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-.auth-tab {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  background: transparent;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.auth-tab.active { background: var(--accent); color: white; }
+/* AUTH */
+.auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; width: 100%; max-width: 400px; box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+.auth-logo { font-size: 22px; font-weight: 600; margin-bottom: 1.75rem; }
+.auth-tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin-bottom: 1.5rem; }
+.auth-tab { flex: 1; padding: 9px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.auth-tab.active { background: var(--green); color: white; }
 .field { margin-bottom: 1rem; }
 .field label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 5px; }
-.field input {
-  width: 100%;
-  height: 42px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  background: var(--bg);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.15s;
-}
-.field input:focus { border-color: var(--accent); }
-.auth-btn {
-  width: 100%;
-  height: 42px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  transition: opacity 0.15s;
-}
+.field input { width: 100%; height: 42px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+.field input:focus { border-color: var(--green); }
+.auth-btn { width: 100%; height: 42px; background: var(--green); color: white; border: none; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
 .auth-btn:hover { opacity: 0.85; }
 .auth-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.auth-error {
-  background: var(--danger-light);
-  color: var(--danger);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 13px;
-  margin-bottom: 1rem;
-  display: none;
-}
-.auth-error.show { display: block; }
-.auth-success {
-  background: var(--accent-light);
-  color: var(--accent);
-  border-radius: var(--radius-sm);
-  padding: 10px 14px;
-  font-size: 13px;
-  margin-bottom: 1rem;
-  display: none;
-}
-.auth-success.show { display: block; }
+.msg { border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; display: none; }
+.msg.show { display: block; }
+.msg.err { background: var(--danger-light); color: var(--danger); }
+.msg.ok { background: var(--green-light); color: var(--green); }
 
-/* ── APP SCREEN ── */
-.app-screen { display: none; padding: 2rem 1rem 4rem; }
-.app-screen.visible { display: block; }
-.container { max-width: 640px; margin: 0 auto; }
+/* APP */
+.app-screen { display: none; min-height: 100vh; flex-direction: column; }
+.app-screen.visible { display: flex; }
 
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.75rem;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.header-left h1 {
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.header-left h1 svg { width: 24px; height: 24px; color: var(--accent); }
-.user-info {
-  font-size: 13px;
-  color: var(--muted);
-  margin-top: 3px;
-  font-family: 'DM Mono', monospace;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 300px;
-}
-.logout-btn {
-  padding: 7px 16px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  color: var(--muted);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-}
+.topbar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 10; }
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.topbar-logo { font-size: 18px; font-weight: 600; }
+.user-chip { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px 4px 4px; font-size: 13px; }
+.user-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--green); color: white; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+.logout-btn { padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
 .logout-btn:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
 
-.error-bar {
-  background: var(--danger-light);
-  border: 1px solid #f5c2c7;
-  border-radius: var(--radius-sm);
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
-  font-size: 13px;
-  color: var(--danger);
-  display: none;
-}
-.error-bar.show { display: block; }
+.tab-nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; padding: 0 1rem; overflow-x: auto; }
+.tab-nav-btn { padding: 14px 18px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; white-space: nowrap; }
+.tab-nav-btn.active { color: var(--green); border-bottom-color: var(--green); }
 
-.add-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-.form-row { display: flex; gap: 8px; margin-bottom: 8px; }
-input[type="text"] {
-  flex: 1;
-  height: 40px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  background: var(--bg);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.15s;
-}
-input[type="text"]:focus { border-color: var(--accent); }
-select {
-  height: 40px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  background: var(--bg);
-  color: var(--text);
-  outline: none;
-  cursor: pointer;
-}
-textarea {
-  width: 100%;
-  min-height: 60px;
-  resize: vertical;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
-  background: var(--bg);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.15s;
-}
-textarea:focus { border-color: var(--accent); }
-.add-btn {
-  height: 40px;
-  padding: 0 18px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.15s;
-}
-.add-btn:hover { opacity: 0.85; }
-.add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.content { flex: 1; padding: 1.5rem 1rem 4rem; }
+.container { max-width: 640px; margin: 0 auto; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
 
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 1.25rem;
-}
-.stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 0.85rem 1rem;
-}
+/* Forms & inputs */
+.add-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.form-row { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+input[type="text"], input[type="number"] { height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+input[type="text"] { flex: 1; min-width: 100px; }
+input[type="text"]:focus, input[type="number"]:focus { border-color: var(--green); }
+input[type="number"] { width: 75px; }
+select { height: 40px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; background: var(--bg); color: var(--text); outline: none; cursor: pointer; }
+textarea { width: 100%; min-height: 56px; resize: vertical; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+textarea:focus { border-color: var(--green); }
+
+.btn { height: 40px; padding: 0 18px; color: white; border: none; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
+.btn:hover { opacity: 0.85; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: var(--radius-sm); height: 36px; padding: 0 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
+.btn-ghost:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+.green { background: var(--green); }
+.blue { background: var(--blue); }
+.purple { background: var(--purple); }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.85rem 1rem; }
 .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-.stat-value { font-size: 26px; font-weight: 600; color: var(--text); margin-top: 2px; letter-spacing: -1px; }
+.stat-value { font-size: 24px; font-weight: 600; color: var(--text); margin-top: 2px; letter-spacing: -0.5px; }
 
+/* Filters */
 .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
-.filter-btn {
-  padding: 5px 14px;
-  font-size: 13px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--muted);
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s;
-}
-.filter-btn:hover { border-color: var(--accent); color: var(--accent); }
-.filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+.filter-btn { padding: 5px 14px; font-size: 13px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); color: var(--muted); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+.filter-btn.active { background: var(--green); color: white; border-color: var(--green); }
+.filter-btn.blue-t.active { background: var(--blue); border-color: var(--blue); }
+.filter-btn.purple-t.active { background: var(--purple); border-color: var(--purple); }
 
-.todo-list { display: flex; flex-direction: column; gap: 8px; }
-.todo-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.25rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  transition: opacity 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-.todo-item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-.todo-item.done { opacity: 0.5; }
-.todo-item.done .todo-title { text-decoration: line-through; color: var(--muted); }
-
-.check-btn {
-  width: 22px; height: 22px; min-width: 22px;
-  border-radius: 50%;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  margin-top: 2px;
-  transition: all 0.15s;
-  color: white;
-}
-.check-btn:hover { border-color: var(--accent); }
-.check-btn.checked { background: var(--accent); border-color: var(--accent); }
+/* List items */
+.item-list { display: flex; flex-direction: column; gap: 8px; }
+.item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); transition: opacity 0.2s; }
+.item:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.item.done { opacity: 0.45; }
+.item.done .item-title { text-decoration: line-through; color: var(--muted); }
+.check-btn { width: 22px; height: 22px; min-width: 22px; border-radius: 50%; border: 1.5px solid var(--border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 2px; transition: all 0.15s; color: white; }
+.check-btn.green-c:hover { border-color: var(--green); }
+.check-btn.green-c.checked { background: var(--green); border-color: var(--green); }
+.check-btn.blue-c:hover { border-color: var(--blue); }
+.check-btn.blue-c.checked { background: var(--blue); border-color: var(--blue); }
+.check-btn.purple-c:hover { border-color: var(--purple); }
+.check-btn.purple-c.checked { background: var(--purple); border-color: var(--purple); }
 .check-btn svg { display: none; }
 .check-btn.checked svg { display: block; }
-
-.todo-body { flex: 1; min-width: 0; }
-.todo-title { font-size: 15px; font-weight: 500; }
-.todo-desc { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
-.todo-meta { display: flex; gap: 8px; align-items: center; margin-top: 7px; flex-wrap: wrap; }
+.item-body { flex: 1; min-width: 0; }
+.item-title { font-size: 15px; font-weight: 500; }
+.item-sub { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+.item-meta { display: flex; gap: 8px; align-items: center; margin-top: 7px; flex-wrap: wrap; }
 .badge { font-size: 11px; padding: 2px 9px; border-radius: 999px; font-weight: 500; }
 .badge.high { background: var(--danger-light); color: var(--danger); }
 .badge.medium { background: var(--warn-light); color: var(--warn); }
-.badge.low { background: var(--accent-light); color: var(--accent); }
-.todo-date { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-
-.del-btn {
-  background: none; border: none; cursor: pointer;
-  color: var(--muted); padding: 4px;
-  border-radius: 6px; transition: all 0.15s; line-height: 1; flex-shrink: 0;
-}
+.badge.low { background: var(--green-light); color: var(--green); }
+.badge.unit { background: var(--blue-light); color: var(--blue); font-family: 'DM Mono', monospace; }
+.badge.group-tag { background: var(--purple-light); color: var(--purple); }
+.item-date { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+.item-author { font-size: 12px; color: var(--muted); }
+.del-btn { background: none; border: none; cursor: pointer; color: var(--muted); padding: 4px; border-radius: 6px; transition: all 0.15s; line-height: 1; flex-shrink: 0; }
 .del-btn:hover { color: var(--danger); background: var(--danger-light); }
 .del-btn svg { width: 16px; height: 16px; }
-
 .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 15px; }
-.empty svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.35; display: block; }
+.empty svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.3; display: block; }
+
+/* Groups */
+.error-bar { background: var(--danger-light); border: 1px solid #f5c2c7; border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-bottom: 1rem; font-size: 13px; color: var(--danger); display: none; }
+.error-bar.show { display: block; }
+
+.group-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.5rem; }
+.group-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); cursor: pointer; transition: all 0.15s; }
+.group-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-color: var(--purple); }
+.group-card.selected { border-color: var(--purple); background: var(--purple-light); }
+.group-card-left { display: flex; align-items: center; gap: 12px; }
+.group-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--purple); color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.group-name { font-size: 15px; font-weight: 500; }
+.group-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.group-code { font-family: 'DM Mono', monospace; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 13px; letter-spacing: 0.1em; cursor: pointer; transition: all 0.15s; }
+.group-code:hover { background: var(--purple-light); border-color: var(--purple); color: var(--purple); }
+
+.divider { display: flex; align-items: center; gap: 12px; margin: 1.25rem 0; }
+.divider-line { flex: 1; height: 1px; background: var(--border); }
+.divider-text { font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+.member-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.member-chip { display: flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px 4px 4px; font-size: 13px; }
+.member-av { width: 22px; height: 22px; border-radius: 50%; background: var(--purple); color: white; font-size: 10px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+
+.group-header { background: var(--purple-light); border: 1px solid #c4b5fd; border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.group-header-name { font-size: 16px; font-weight: 600; color: var(--purple); }
+.group-header-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
 </style>
 </head>
 <body>
 
-<!-- ── AUTH SCREEN ── -->
+<!-- AUTH -->
 <div class="auth-screen" id="auth-screen">
   <div class="auth-card">
-    <div class="auth-logo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 11l3 3L22 4"/>
-        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-      </svg>
-      <span>Aufgaben</span>
-    </div>
-
+    <div class="auth-logo">📋 Meine App</div>
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Anmelden</button>
-      <button class="auth-tab" onclick="switchTab('register')">Registrieren</button>
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Anmelden</button>
+      <button class="auth-tab" onclick="switchAuthTab('register')">Registrieren</button>
     </div>
-
-    <div class="auth-error" id="auth-error"></div>
-    <div class="auth-success" id="auth-success"></div>
-
+    <div class="msg err" id="auth-err"></div>
+    <div class="msg ok" id="auth-ok"></div>
+    <div class="field" id="username-field" style="display:none">
+      <label>Nutzername</label>
+      <input type="text" id="auth-username" placeholder="z.B. alex123" maxlength="30">
+    </div>
     <div class="field">
       <label>E-Mail</label>
       <input type="email" id="auth-email" placeholder="deine@email.de" autocomplete="email">
@@ -361,302 +177,543 @@ textarea:focus { border-color: var(--accent); }
       <label>Passwort</label>
       <input type="password" id="auth-password" placeholder="Mindestens 6 Zeichen" autocomplete="current-password">
     </div>
-
     <button class="auth-btn" id="auth-btn" onclick="submitAuth()">Anmelden</button>
   </div>
 </div>
 
-<!-- ── APP SCREEN ── -->
+<!-- APP -->
 <div class="app-screen" id="app-screen">
-  <div class="container">
-
-    <header>
-      <div class="header-left">
-        <h1>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 11l3 3L22 4"/>
-            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-          </svg>
-          Aufgaben
-        </h1>
-        <div class="user-info" id="user-email">–</div>
-      </div>
-      <button class="logout-btn" onclick="logout()">Abmelden</button>
-    </header>
-
-    <div class="error-bar" id="error-bar"></div>
-
-    <div class="add-card">
-      <div class="form-row">
-        <input type="text" id="title-input" placeholder="Neue Aufgabe…" maxlength="200">
-        <select id="priority-sel">
-          <option value="medium">⚡ Mittel</option>
-          <option value="high">🔴 Hoch</option>
-          <option value="low">🟢 Niedrig</option>
-        </select>
-        <button class="add-btn" id="add-btn" onclick="addTodo()">+ Hinzufügen</button>
-      </div>
-      <textarea id="desc-input" placeholder="Beschreibung (optional)…"></textarea>
-    </div>
-
-    <div class="stats">
-      <div class="stat"><div class="stat-label">Gesamt</div><div class="stat-value" id="s-total">0</div></div>
-      <div class="stat"><div class="stat-label">Offen</div><div class="stat-value" id="s-open">0</div></div>
-      <div class="stat"><div class="stat-label">Erledigt</div><div class="stat-value" id="s-done">0</div></div>
-    </div>
-
-    <div class="filters">
-      <button class="filter-btn active" onclick="setFilter('all',this)">Alle</button>
-      <button class="filter-btn" onclick="setFilter('open',this)">Offen</button>
-      <button class="filter-btn" onclick="setFilter('done',this)">Erledigt</button>
-      <button class="filter-btn" onclick="setFilter('high',this)">🔴 Hoch</button>
-      <button class="filter-btn" onclick="setFilter('medium',this)">⚡ Mittel</button>
-      <button class="filter-btn" onclick="setFilter('low',this)">🟢 Niedrig</button>
-    </div>
-
-    <div class="todo-list" id="todo-list">
-      <div class="empty">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-        Noch keine Aufgaben
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">📋 Meine App</span>
+      <div class="user-chip">
+        <div class="user-avatar" id="user-avatar">–</div>
+        <span id="user-name">–</span>
       </div>
     </div>
+    <button class="logout-btn" onclick="logout()">Abmelden</button>
+  </div>
 
+  <div class="tab-nav">
+    <button class="tab-nav-btn active" onclick="switchPanel('todos',this)">✓ Aufgaben</button>
+    <button class="tab-nav-btn" onclick="switchPanel('shopping',this)">🛒 Einkauf</button>
+    <button class="tab-nav-btn" onclick="switchPanel('groups',this)">👥 Gruppen</button>
+    <button class="tab-nav-btn" id="group-tab-btn" onclick="switchPanel('group-list',this)" style="display:none">🟣 <span id="group-tab-name">Gruppe</span></button>
+  </div>
+
+  <div class="content">
+    <div class="container">
+      <div class="error-bar" id="error-bar"></div>
+
+      <!-- TODOS -->
+      <div class="tab-panel active" id="panel-todos">
+        <div class="add-card">
+          <div class="form-row">
+            <input type="text" id="todo-title" placeholder="Neue Aufgabe…" maxlength="200">
+            <select id="todo-priority">
+              <option value="medium">⚡ Mittel</option>
+              <option value="high">🔴 Hoch</option>
+              <option value="low">🟢 Niedrig</option>
+            </select>
+            <button class="btn green" id="todo-add-btn" onclick="addTodo()">+ Hinzufügen</button>
+          </div>
+          <textarea id="todo-desc" placeholder="Beschreibung (optional)…"></textarea>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Gesamt</div><div class="stat-value" id="t-total">0</div></div>
+          <div class="stat"><div class="stat-label">Offen</div><div class="stat-value" id="t-open">0</div></div>
+          <div class="stat"><div class="stat-label">Erledigt</div><div class="stat-value" id="t-done">0</div></div>
+        </div>
+        <div class="filters" id="todo-filters">
+          <button class="filter-btn active" onclick="setFilter('todos','all',this)">Alle</button>
+          <button class="filter-btn" onclick="setFilter('todos','open',this)">Offen</button>
+          <button class="filter-btn" onclick="setFilter('todos','done',this)">Erledigt</button>
+          <button class="filter-btn" onclick="setFilter('todos','high',this)">🔴 Hoch</button>
+          <button class="filter-btn" onclick="setFilter('todos','medium',this)">⚡ Mittel</button>
+          <button class="filter-btn" onclick="setFilter('todos','low',this)">🟢 Niedrig</button>
+        </div>
+        <div class="item-list" id="todo-list"></div>
+      </div>
+
+      <!-- PERSÖNLICHER EINKAUF -->
+      <div class="tab-panel" id="panel-shopping">
+        <div class="add-card">
+          <div class="form-row">
+            <input type="text" id="shop-name" placeholder="Artikel…" maxlength="200">
+            <input type="number" id="shop-qty" value="1" min="0.01" step="0.01">
+            <select id="shop-unit">
+              <option value="stk">Stk</option>
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+              <option value="l">l</option>
+              <option value="ml">ml</option>
+            </select>
+            <button class="btn blue" id="shop-add-btn" onclick="addShop()">+ Hinzufügen</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Gesamt</div><div class="stat-value" id="s-total">0</div></div>
+          <div class="stat"><div class="stat-label">Offen</div><div class="stat-value" id="s-open">0</div></div>
+          <div class="stat"><div class="stat-label">Erledigt</div><div class="stat-value" id="s-done">0</div></div>
+        </div>
+        <div class="filters">
+          <button class="filter-btn blue-t active" onclick="setFilter('shop','all',this)">Alle</button>
+          <button class="filter-btn blue-t" onclick="setFilter('shop','open',this)">Offen</button>
+          <button class="filter-btn blue-t" onclick="setFilter('shop','done',this)">Erledigt</button>
+        </div>
+        <div class="item-list" id="shop-list"></div>
+      </div>
+
+      <!-- GRUPPEN VERWALTUNG -->
+      <div class="tab-panel" id="panel-groups">
+        <div class="add-card">
+          <div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:10px;">Neue Gruppe erstellen</div>
+          <div class="form-row">
+            <input type="text" id="group-name-input" placeholder="Gruppenname…" maxlength="50">
+            <button class="btn purple" onclick="createGroup()">+ Erstellen</button>
+          </div>
+        </div>
+        <div class="divider"><div class="divider-line"></div><div class="divider-text">oder per Code beitreten</div><div class="divider-line"></div></div>
+        <div class="add-card">
+          <div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:10px;">Einladungscode eingeben</div>
+          <div class="form-row">
+            <input type="text" id="invite-code-input" placeholder="z.B. A1B2C3D4" maxlength="8" style="text-transform:uppercase;font-family:'DM Mono',monospace;letter-spacing:0.1em">
+            <button class="btn purple" onclick="joinGroup()">Beitreten</button>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:var(--muted);margin-bottom:10px;">Meine Gruppen</div>
+        <div id="groups-list" class="group-list"></div>
+      </div>
+
+      <!-- GRUPPEN EINKAUFSLISTE -->
+      <div class="tab-panel" id="panel-group-list">
+        <div class="group-header" id="group-header"></div>
+        <div class="add-card">
+          <div class="form-row">
+            <input type="text" id="gshop-name" placeholder="Artikel…" maxlength="200">
+            <input type="number" id="gshop-qty" value="1" min="0.01" step="0.01">
+            <select id="gshop-unit">
+              <option value="stk">Stk</option>
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="mg">mg</option>
+              <option value="l">l</option>
+              <option value="ml">ml</option>
+            </select>
+            <button class="btn purple" id="gshop-add-btn" onclick="addGroupItem()">+ Hinzufügen</button>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Gesamt</div><div class="stat-value" id="gs-total">0</div></div>
+          <div class="stat"><div class="stat-label">Offen</div><div class="stat-value" id="gs-open">0</div></div>
+          <div class="stat"><div class="stat-label">Erledigt</div><div class="stat-value" id="gs-done">0</div></div>
+        </div>
+        <div class="filters">
+          <button class="filter-btn purple-t active" onclick="setFilter('gshop','all',this)">Alle</button>
+          <button class="filter-btn purple-t" onclick="setFilter('gshop','open',this)">Offen</button>
+          <button class="filter-btn purple-t" onclick="setFilter('gshop','done',this)">Erledigt</button>
+        </div>
+        <div class="item-list" id="gshop-list"></div>
+      </div>
+
+    </div>
   </div>
 </div>
 
 <script>
-// ── Konfiguration ─────────────────────────────────────────────────
 const SB_URL = 'https://sntkvqzfiyhtvtufqfgp.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNudGt2cXpmaXlodHZ0dWZxZmdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcxNDQ5MjcsImV4cCI6MjA5MjcyMDkyN30.viXudtCbUkzLEmdsXqAGYFwlxNB-JiHNp11g0t1XHc0';
-// ─────────────────────────────────────────────────────────────────
 
-let session = null;
-let todos = [];
-let filter = 'all';
+let session = null, profile = null;
+let todos = [], shopItems = [], groups = [], groupItems = [];
+let todoFilter = 'all', shopFilter = 'all', gshopFilter = 'all';
 let authMode = 'login';
+let activeGroup = null;
+let refreshTimer = null;
 
-// ── Helpers ──────────────────────────────────────────────────────
-async function sbFetch(path, method = 'GET', body = null, token = null) {
-  const headers = {
-    'Content-Type': 'application/json',
-    'apikey': SB_KEY,
-    'Authorization': 'Bearer ' + (token || SB_KEY),
-    'Prefer': 'return=representation'
-  };
+// ── Fetch ──────────────────────────────────────────────────────
+async function sb(path, method = 'GET', body = null, token = null) {
   const res = await fetch(SB_URL + path, {
     method,
-    headers,
+    headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY, 'Authorization': 'Bearer ' + (token || SB_KEY), 'Prefer': 'return=representation' },
     body: body ? JSON.stringify(body) : undefined
   });
   if (res.status === 204) return null;
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error_description || data.message || data.error || 'HTTP ' + res.status);
-  return data;
+  const d = await res.json();
+  if (!res.ok) throw new Error(d.error_description || d.message || d.error || 'HTTP ' + res.status);
+  return d;
 }
+const api = (path, method = 'GET', body = null) => sb(path, method, body, session.access_token);
 
-function authFetch(path, body) {
-  return sbFetch(path, 'POST', body);
-}
-
-function apiFetch(path, method = 'GET', body = null) {
-  return sbFetch(path, method, body, session.access_token);
-}
-
-// ── Auth ─────────────────────────────────────────────────────────
-function switchTab(mode) {
+// ── Auth ───────────────────────────────────────────────────────
+function switchAuthTab(mode) {
   authMode = mode;
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && mode === 'login') || (i === 1 && mode === 'register'));
-  });
+  document.querySelectorAll('.auth-tab').forEach((t, i) => t.classList.toggle('active', (i===0)===(mode==='login')));
+  document.getElementById('username-field').style.display = mode === 'register' ? 'block' : 'none';
   document.getElementById('auth-btn').textContent = mode === 'login' ? 'Anmelden' : 'Konto erstellen';
-  document.getElementById('auth-error').classList.remove('show');
-  document.getElementById('auth-success').classList.remove('show');
+  document.getElementById('auth-err').classList.remove('show');
+  document.getElementById('auth-ok').classList.remove('show');
 }
 
 async function submitAuth() {
   const email = document.getElementById('auth-email').value.trim();
   const password = document.getElementById('auth-password').value;
-  const errEl = document.getElementById('auth-error');
-  const sucEl = document.getElementById('auth-success');
+  const username = document.getElementById('auth-username').value.trim().toLowerCase();
+  const errEl = document.getElementById('auth-err');
+  const okEl = document.getElementById('auth-ok');
   const btn = document.getElementById('auth-btn');
-
-  errEl.classList.remove('show');
-  sucEl.classList.remove('show');
-
-  if (!email || !password) {
-    errEl.textContent = 'Bitte E-Mail und Passwort eingeben.';
-    errEl.classList.add('show');
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = '…';
-
+  errEl.classList.remove('show'); okEl.classList.remove('show');
+  if (!email || !password) { errEl.textContent = 'Bitte alle Felder ausfüllen.'; errEl.classList.add('show'); return; }
+  if (authMode === 'register' && username.length < 3) { errEl.textContent = 'Nutzername mind. 3 Zeichen.'; errEl.classList.add('show'); return; }
+  btn.disabled = true; btn.textContent = '…';
   try {
     if (authMode === 'register') {
-      await authFetch('/auth/v1/signup', { email, password });
-      sucEl.textContent = '✓ Konto erstellt! Bitte E-Mail bestätigen, dann anmelden.';
-      sucEl.classList.add('show');
-      switchTab('login');
+      const data = await sb('/auth/v1/signup', 'POST', { email, password });
+      if (data.user) {
+        const tok = data.access_token || SB_KEY;
+        await sb('/rest/v1/profiles', 'POST', { id: data.user.id, username }, tok);
+        if (data.access_token) { session = data; await loadProfile(); showApp(); return; }
+      }
+      okEl.textContent = '✓ Konto erstellt! Bitte E-Mail bestätigen.';
+      okEl.classList.add('show'); switchAuthTab('login');
     } else {
-      const data = await authFetch('/auth/v1/token?grant_type=password', { email, password });
-      session = data;
-      showApp(data.user);
+      const data = await sb('/auth/v1/token?grant_type=password', 'POST', { email, password });
+      session = data; await loadProfile(); showApp();
     }
-  } catch (e) {
-    errEl.textContent = translateError(e.message);
-    errEl.classList.add('show');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = authMode === 'login' ? 'Anmelden' : 'Konto erstellen';
-  }
+  } catch(e) { errEl.textContent = xlateErr(e.message); errEl.classList.add('show'); }
+  finally { btn.disabled = false; btn.textContent = authMode === 'login' ? 'Anmelden' : 'Konto erstellen'; }
 }
 
-function translateError(msg) {
-  if (msg.includes('Invalid login')) return 'E-Mail oder Passwort falsch.';
-  if (msg.includes('already registered')) return 'Diese E-Mail ist bereits registriert.';
-  if (msg.includes('Email not confirmed')) return 'Bitte zuerst die E-Mail bestätigen.';
-  if (msg.includes('at least 6')) return 'Passwort muss mindestens 6 Zeichen haben.';
-  return msg;
+async function loadProfile() {
+  try { const d = await api('/rest/v1/profiles?id=eq.' + session.user.id); profile = d && d[0] ? d[0] : null; } catch(_) {}
 }
 
 async function logout() {
-  try {
-    await apiFetch('/auth/v1/logout', 'POST');
-  } catch(_) {}
-  session = null;
-  todos = [];
+  try { await api('/auth/v1/logout', 'POST'); } catch(_) {}
+  session = null; profile = null; clearInterval(refreshTimer);
   document.getElementById('app-screen').classList.remove('visible');
   document.getElementById('auth-screen').style.display = 'flex';
-  document.getElementById('auth-email').value = '';
-  document.getElementById('auth-password').value = '';
+  ['auth-email','auth-password','auth-username'].forEach(id => document.getElementById(id).value = '');
 }
 
-function showApp(user) {
+function showApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app-screen').classList.add('visible');
-  document.getElementById('user-email').textContent = user.email;
-  loadTodos();
+  const name = profile ? profile.username : session.user.email.split('@')[0];
+  document.getElementById('user-name').textContent = name;
+  document.getElementById('user-avatar').textContent = name[0].toUpperCase();
+  loadAll();
+  refreshTimer = setInterval(refreshGroupItems, 15000);
 }
 
-// ── Todos ─────────────────────────────────────────────────────────
-async function loadTodos() {
-  try {
-    const data = await apiFetch('/rest/v1/todos?order=created_at.desc');
-    todos = data || [];
-    render();
-  } catch(e) {
-    showErr('Laden fehlgeschlagen: ' + e.message);
-  }
+function loadAll() { loadTodos(); loadShop(); loadGroups(); }
+
+function xlateErr(msg) {
+  if (msg.includes('Invalid login')) return 'E-Mail oder Passwort falsch.';
+  if (msg.includes('already registered')) return 'E-Mail bereits registriert.';
+  if (msg.includes('Email not confirmed')) return 'Bitte E-Mail bestätigen.';
+  if (msg.includes('at least 6')) return 'Passwort mind. 6 Zeichen.';
+  if (msg.includes('duplicate') && msg.includes('username')) return 'Nutzername bereits vergeben.';
+  if (msg.includes('429') || msg.includes('rate')) return 'Zu viele Versuche – kurz warten.';
+  return msg;
 }
 
-async function addTodo() {
-  const title = document.getElementById('title-input').value.trim();
-  if (!title) return;
-  const btn = document.getElementById('add-btn');
-  btn.disabled = true;
-  try {
-    const result = await apiFetch('/rest/v1/todos', 'POST', {
-      title,
-      description: document.getElementById('desc-input').value.trim() || null,
-      priority: document.getElementById('priority-sel').value,
-      user_id: session.user.id
-    });
-    if (result && result[0]) todos.unshift(result[0]);
-    document.getElementById('title-input').value = '';
-    document.getElementById('desc-input').value = '';
-    render();
-  } catch(e) {
-    showErr('Fehler: ' + e.message);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-async function toggle(id) {
-  const t = todos.find(x => x.id === id);
-  if (!t) return;
-  try {
-    const result = await apiFetch('/rest/v1/todos?id=eq.' + id, 'PATCH', { completed: !t.completed });
-    const idx = todos.findIndex(x => x.id === id);
-    if (result && result[0]) todos[idx] = result[0];
-    render();
-  } catch(e) { showErr(e.message); }
-}
-
-async function remove(id) {
-  try {
-    await apiFetch('/rest/v1/todos?id=eq.' + id, 'DELETE');
-    todos = todos.filter(x => x.id !== id);
-    render();
-  } catch(e) { showErr(e.message); }
-}
-
-// ── UI ────────────────────────────────────────────────────────────
-function setFilter(f, btn) {
-  filter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+// ── Panel ──────────────────────────────────────────────────────
+function switchPanel(name, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
   btn.classList.add('active');
-  render();
+  if (name === 'group-list' && activeGroup) refreshGroupItems();
 }
 
-function getFiltered() {
-  if (filter === 'open') return todos.filter(t => !t.completed);
-  if (filter === 'done') return todos.filter(t => t.completed);
-  if (['high','medium','low'].includes(filter)) return todos.filter(t => t.priority === filter);
-  return todos;
+// ── Todos ──────────────────────────────────────────────────────
+async function loadTodos() {
+  try { todos = await api('/rest/v1/todos?order=created_at.desc') || []; renderTodos(); } catch(e) { showErr(e.message); }
+}
+async function addTodo() {
+  const title = document.getElementById('todo-title').value.trim();
+  if (!title) return;
+  const btn = document.getElementById('todo-add-btn'); btn.disabled = true;
+  try {
+    const r = await api('/rest/v1/todos', 'POST', { title, description: document.getElementById('todo-desc').value.trim() || null, priority: document.getElementById('todo-priority').value, user_id: session.user.id });
+    if (r && r[0]) todos.unshift(r[0]);
+    document.getElementById('todo-title').value = ''; document.getElementById('todo-desc').value = '';
+    renderTodos();
+  } catch(e) { showErr(e.message); } finally { btn.disabled = false; }
+}
+async function toggleTodo(id) {
+  const t = todos.find(x => x.id === id); if (!t) return;
+  const r = await api('/rest/v1/todos?id=eq.' + id, 'PATCH', { completed: !t.completed });
+  const i = todos.findIndex(x => x.id === id); if (r && r[0]) todos[i] = r[0]; renderTodos();
+}
+async function deleteTodo(id) {
+  await api('/rest/v1/todos?id=eq.' + id, 'DELETE'); todos = todos.filter(x => x.id !== id); renderTodos();
+}
+function renderTodos() {
+  const done = todos.filter(t => t.completed).length;
+  document.getElementById('t-total').textContent = todos.length;
+  document.getElementById('t-open').textContent = todos.length - done;
+  document.getElementById('t-done').textContent = done;
+  const pLabel = { high: '🔴 Hoch', medium: '⚡ Mittel', low: '🟢 Niedrig' };
+  let list = todos;
+  if (todoFilter === 'open') list = todos.filter(t => !t.completed);
+  else if (todoFilter === 'done') list = todos.filter(t => t.completed);
+  else if (['high','medium','low'].includes(todoFilter)) list = todos.filter(t => t.priority === todoFilter);
+  const el = document.getElementById('todo-list');
+  if (!list.length) { el.innerHTML = emptyHtml('Keine Aufgaben'); return; }
+  el.innerHTML = list.map(t => `
+    <div class="item ${t.completed?'done':''}">
+      <button class="check-btn green-c ${t.completed?'checked':''}" onclick="toggleTodo('${t.id}')">${chk()}</button>
+      <div class="item-body">
+        <div class="item-title">${esc(t.title)}</div>
+        ${t.description ? `<div class="item-sub">${esc(t.description)}</div>` : ''}
+        <div class="item-meta"><span class="badge ${t.priority}">${pLabel[t.priority]}</span><span class="item-date">${fmtDT(t.created_at)}</span></div>
+      </div>
+      <button class="del-btn" onclick="deleteTodo('${t.id}')">${trash()}</button>
+    </div>`).join('');
+}
+
+// ── Persönlicher Einkauf ───────────────────────────────────────
+async function loadShop() {
+  try { shopItems = await api('/rest/v1/shopping_items?order=created_at.desc') || []; renderShop(); } catch(e) { showErr(e.message); }
+}
+async function addShop() {
+  const name = document.getElementById('shop-name').value.trim();
+  const qty = parseFloat(document.getElementById('shop-qty').value);
+  if (!name || isNaN(qty) || qty <= 0) return;
+  const btn = document.getElementById('shop-add-btn'); btn.disabled = true;
+  try {
+    const r = await api('/rest/v1/shopping_items', 'POST', { name, quantity: qty, unit: document.getElementById('shop-unit').value, user_id: session.user.id });
+    if (r && r[0]) { const it = r[0]; if (!it.created_by && profile) it.created_by = profile.username; shopItems.unshift(it); }
+    document.getElementById('shop-name').value = ''; document.getElementById('shop-qty').value = '1';
+    renderShop();
+  } catch(e) { showErr(e.message); } finally { btn.disabled = false; }
+}
+async function toggleShop(id) {
+  const t = shopItems.find(x => x.id === id); if (!t) return;
+  const r = await api('/rest/v1/shopping_items?id=eq.' + id, 'PATCH', { completed: !t.completed });
+  const i = shopItems.findIndex(x => x.id === id); if (r && r[0]) shopItems[i] = r[0]; renderShop();
+}
+async function deleteShop(id) {
+  await api('/rest/v1/shopping_items?id=eq.' + id, 'DELETE'); shopItems = shopItems.filter(x => x.id !== id); renderShop();
+}
+function renderShop() {
+  const done = shopItems.filter(t => t.completed).length;
+  document.getElementById('s-total').textContent = shopItems.length;
+  document.getElementById('s-open').textContent = shopItems.length - done;
+  document.getElementById('s-done').textContent = done;
+  let list = shopItems;
+  if (shopFilter === 'open') list = shopItems.filter(t => !t.completed);
+  else if (shopFilter === 'done') list = shopItems.filter(t => t.completed);
+  const el = document.getElementById('shop-list');
+  if (!list.length) { el.innerHTML = emptyHtml('Keine Artikel'); return; }
+  el.innerHTML = list.map(t => `
+    <div class="item ${t.completed?'done':''}">
+      <button class="check-btn blue-c ${t.completed?'checked':''}" onclick="toggleShop('${t.id}')">${chk()}</button>
+      <div class="item-body">
+        <div class="item-title">${esc(t.name)}</div>
+        <div class="item-meta"><span class="badge unit">${fmtQty(t.quantity)} ${t.unit}</span><span class="item-date">${fmtDT(t.created_at)}</span>${t.created_by?`<span class="item-author">👤 ${esc(t.created_by)}</span>`:''}</div>
+      </div>
+      <button class="del-btn" onclick="deleteShop('${t.id}')">${trash()}</button>
+    </div>`).join('');
+}
+
+// ── Gruppen ────────────────────────────────────────────────────
+async function loadGroups() {
+  try {
+    const memberships = await api('/rest/v1/group_members?user_id=eq.' + session.user.id + '&select=group_id') || [];
+    if (!memberships.length) { groups = []; renderGroups(); return; }
+    const ids = memberships.map(m => m.group_id).join(',');
+    groups = await api('/rest/v1/groups?id=in.(' + ids + ')&order=created_at.desc') || [];
+    // Mitgliederzahl laden
+    for (const g of groups) {
+      const members = await api('/rest/v1/group_members?group_id=eq.' + g.id + '&select=user_id') || [];
+      g._memberCount = members.length;
+    }
+    renderGroups();
+  } catch(e) { showErr(e.message); }
+}
+
+async function createGroup() {
+  const name = document.getElementById('group-name-input').value.trim();
+  if (!name) return;
+  try {
+    const g = await api('/rest/v1/groups', 'POST', { name, created_by: session.user.id });
+    if (g && g[0]) {
+      await api('/rest/v1/group_members', 'POST', { group_id: g[0].id, user_id: session.user.id });
+      document.getElementById('group-name-input').value = '';
+      await loadGroups();
+    }
+  } catch(e) { showErr(e.message); }
+}
+
+async function joinGroup() {
+  const code = document.getElementById('invite-code-input').value.trim().toUpperCase();
+  if (code.length < 4) return;
+  try {
+    const g = await api('/rest/v1/groups?invite_code=eq.' + code);
+    if (!g || !g.length) { showErr('Kein Gruppe mit diesem Code gefunden.'); return; }
+    const group = g[0];
+    try {
+      await api('/rest/v1/group_members', 'POST', { group_id: group.id, user_id: session.user.id });
+    } catch(e) {
+      if (e.message.includes('duplicate') || e.message.includes('unique')) { showErr('Du bist bereits Mitglied dieser Gruppe.'); return; }
+      throw e;
+    }
+    document.getElementById('invite-code-input').value = '';
+    await loadGroups();
+  } catch(e) { showErr(e.message); }
+}
+
+async function leaveGroup(groupId) {
+  if (!confirm('Gruppe wirklich verlassen?')) return;
+  try {
+    await api('/rest/v1/group_members?group_id=eq.' + groupId + '&user_id=eq.' + session.user.id, 'DELETE');
+    if (activeGroup && activeGroup.id === groupId) {
+      activeGroup = null;
+      document.getElementById('group-tab-btn').style.display = 'none';
+    }
+    await loadGroups();
+  } catch(e) { showErr(e.message); }
+}
+
+function openGroup(group) {
+  activeGroup = group;
+  document.getElementById('group-tab-name').textContent = group.name;
+  document.getElementById('group-tab-btn').style.display = '';
+  const hdr = document.getElementById('group-header');
+  hdr.innerHTML = `
+    <div>
+      <div class="group-header-name">👥 ${esc(group.name)}</div>
+      <div class="group-header-meta">Einladungscode: <span class="group-code" onclick="copyCode('${group.invite_code}')" title="Klicken zum Kopieren">${group.invite_code}</span> · ${group._memberCount || '?'} Mitglied${group._memberCount !== 1 ? 'er' : ''}</div>
+    </div>
+    <button class="btn-ghost" onclick="leaveGroup('${group.id}')">Verlassen</button>
+  `;
+  document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('group-tab-btn').classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-group-list').classList.add('active');
+  loadGroupItems();
+}
+
+function copyCode(code) {
+  navigator.clipboard.writeText(code).then(() => { showSuccess('Code "' + code + '" kopiert!'); }).catch(() => {});
+}
+
+function renderGroups() {
+  const el = document.getElementById('groups-list');
+  if (!groups.length) { el.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Noch keine Gruppen</div>'; return; }
+  el.innerHTML = groups.map(g => `
+    <div class="group-card ${activeGroup && activeGroup.id === g.id ? 'selected' : ''}" onclick="openGroup(${JSON.stringify(g).replace(/"/g,'&quot;')})">
+      <div class="group-card-left">
+        <div class="group-icon">👥</div>
+        <div>
+          <div class="group-name">${esc(g.name)}</div>
+          <div class="group-meta">${g._memberCount || '?'} Mitglied${g._memberCount !== 1 ? 'er' : ''} · ${fmtD(g.created_at)}</div>
+        </div>
+      </div>
+      <span class="group-code" onclick="event.stopPropagation();copyCode('${g.invite_code}')" title="Klicken zum Kopieren">${g.invite_code}</span>
+    </div>`).join('');
+}
+
+// ── Gruppen Einkaufsliste ──────────────────────────────────────
+async function loadGroupItems() {
+  if (!activeGroup) return;
+  try { groupItems = await api('/rest/v1/group_shopping_items?group_id=eq.' + activeGroup.id + '&order=created_at.desc') || []; renderGroupItems(); } catch(e) { showErr(e.message); }
+}
+async function refreshGroupItems() {
+  if (!activeGroup) return;
+  try { groupItems = await api('/rest/v1/group_shopping_items?group_id=eq.' + activeGroup.id + '&order=created_at.desc') || []; renderGroupItems(); } catch(_) {}
+}
+async function addGroupItem() {
+  if (!activeGroup) return;
+  const name = document.getElementById('gshop-name').value.trim();
+  const qty = parseFloat(document.getElementById('gshop-qty').value);
+  if (!name || isNaN(qty) || qty <= 0) return;
+  const btn = document.getElementById('gshop-add-btn'); btn.disabled = true;
+  try {
+    const uname = profile ? profile.username : session.user.email.split('@')[0];
+    const r = await api('/rest/v1/group_shopping_items', 'POST', { group_id: activeGroup.id, user_id: session.user.id, name, quantity: qty, unit: document.getElementById('gshop-unit').value, created_by_username: uname });
+    if (r && r[0]) groupItems.unshift(r[0]);
+    document.getElementById('gshop-name').value = ''; document.getElementById('gshop-qty').value = '1';
+    renderGroupItems();
+  } catch(e) { showErr(e.message); } finally { btn.disabled = false; }
+}
+async function toggleGroupItem(id) {
+  const t = groupItems.find(x => x.id === id); if (!t) return;
+  const uname = profile ? profile.username : session.user.email.split('@')[0];
+  const patch = { completed: !t.completed, completed_by_username: !t.completed ? uname : null };
+  const r = await api('/rest/v1/group_shopping_items?id=eq.' + id, 'PATCH', patch);
+  const i = groupItems.findIndex(x => x.id === id); if (r && r[0]) groupItems[i] = r[0]; renderGroupItems();
+}
+async function deleteGroupItem(id) {
+  await api('/rest/v1/group_shopping_items?id=eq.' + id, 'DELETE'); groupItems = groupItems.filter(x => x.id !== id); renderGroupItems();
+}
+function renderGroupItems() {
+  const done = groupItems.filter(t => t.completed).length;
+  document.getElementById('gs-total').textContent = groupItems.length;
+  document.getElementById('gs-open').textContent = groupItems.length - done;
+  document.getElementById('gs-done').textContent = done;
+  let list = groupItems;
+  if (gshopFilter === 'open') list = groupItems.filter(t => !t.completed);
+  else if (gshopFilter === 'done') list = groupItems.filter(t => t.completed);
+  const el = document.getElementById('gshop-list');
+  if (!list.length) { el.innerHTML = emptyHtml('Keine Artikel'); return; }
+  el.innerHTML = list.map(t => `
+    <div class="item ${t.completed?'done':''}">
+      <button class="check-btn purple-c ${t.completed?'checked':''}" onclick="toggleGroupItem('${t.id}')">${chk()}</button>
+      <div class="item-body">
+        <div class="item-title">${esc(t.name)}</div>
+        <div class="item-meta">
+          <span class="badge unit">${fmtQty(t.quantity)} ${t.unit}</span>
+          <span class="item-date">${fmtDT(t.created_at)}</span>
+          ${t.created_by_username ? `<span class="item-author">➕ ${esc(t.created_by_username)}</span>` : ''}
+          ${t.completed && t.completed_by_username ? `<span class="item-author">✓ ${esc(t.completed_by_username)}</span>` : ''}
+        </div>
+      </div>
+      <button class="del-btn" onclick="deleteGroupItem('${t.id}')">${trash()}</button>
+    </div>`).join('');
+}
+
+// ── Utilities ──────────────────────────────────────────────────
+function setFilter(type, f, btn) {
+  if (type === 'todos') { todoFilter = f; document.querySelectorAll('#todo-filters .filter-btn').forEach(b => b.classList.remove('active')); }
+  else if (type === 'shop') { shopFilter = f; btn.closest('.filters').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); }
+  else { gshopFilter = f; btn.closest('.filters').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active')); }
+  btn.classList.add('active');
+  if (type === 'todos') renderTodos();
+  else if (type === 'shop') renderShop();
+  else renderGroupItems();
 }
 
 function showErr(msg) {
   const el = document.getElementById('error-bar');
-  el.textContent = '⚠️ ' + msg;
-  el.classList.add('show');
+  el.style.background = 'var(--danger-light)'; el.style.color = 'var(--danger)';
+  el.textContent = '⚠️ ' + msg; el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 5000);
 }
-
-const pLabel = { high: '🔴 Hoch', medium: '⚡ Mittel', low: '🟢 Niedrig' };
-const fmtDate = s => new Date(s).toLocaleDateString('de-DE');
-const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-function render() {
-  const done = todos.filter(t => t.completed).length;
-  document.getElementById('s-total').textContent = todos.length;
-  document.getElementById('s-open').textContent = todos.length - done;
-  document.getElementById('s-done').textContent = done;
-
-  const list = getFiltered();
-  const el = document.getElementById('todo-list');
-  if (!list.length) {
-    el.innerHTML = '<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Keine Aufgaben</div>';
-    return;
-  }
-  el.innerHTML = list.map(t => `
-    <div class="todo-item ${t.completed ? 'done' : ''}">
-      <button class="check-btn ${t.completed ? 'checked' : ''}" onclick="toggle('${t.id}')" title="Status ändern">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>
-      </button>
-      <div class="todo-body">
-        <div class="todo-title">${esc(t.title)}</div>
-        ${t.description ? `<div class="todo-desc">${esc(t.description)}</div>` : ''}
-        <div class="todo-meta">
-          <span class="badge ${t.priority}">${pLabel[t.priority] || t.priority}</span>
-          <span class="todo-date">${fmtDate(t.created_at)}</span>
-        </div>
-      </div>
-      <button class="del-btn" onclick="remove('${t.id}')" title="Löschen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-      </button>
-    </div>
-  `).join('');
+function showSuccess(msg) {
+  const el = document.getElementById('error-bar');
+  el.style.background = 'var(--green-light)'; el.style.color = 'var(--green)';
+  el.textContent = '✓ ' + msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
 }
+const fmtDT = s => new Date(s).toLocaleString('de-DE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+const fmtD  = s => new Date(s).toLocaleDateString('de-DE');
+const fmtQty = n => Number(n) % 1 === 0 ? Number(n) : parseFloat(Number(n).toFixed(3));
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const chk = () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="12" height="12"><polyline points="20 6 9 17 4 12"/></svg>';
+const trash = () => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>';
+const emptyHtml = t => `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>${t}</div>`;
 
-// Enter-Taste im Titel-Feld
-document.getElementById('auth-password').addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitAuth();
-});
-document.getElementById('title-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') addTodo();
-});
+// Enter-Tasten
+document.getElementById('auth-password').addEventListener('keydown', e => { if(e.key==='Enter') submitAuth(); });
+document.getElementById('todo-title').addEventListener('keydown', e => { if(e.key==='Enter') addTodo(); });
+document.getElementById('shop-name').addEventListener('keydown', e => { if(e.key==='Enter') addShop(); });
+document.getElementById('gshop-name').addEventListener('keydown', e => { if(e.key==='Enter') addGroupItem(); });
+document.getElementById('invite-code-input').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
 </script>
 </body>
 </html>
