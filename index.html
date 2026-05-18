@@ -116,6 +116,8 @@ input[type="file"] { display: none; }
 
 /* ITEMS */
 .item-list { display: flex; flex-direction: column; gap: 8px; }
+.item { transition: opacity 0.3s, transform 0.3s; }
+.item.done { transform: none; }
 .item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; display: flex; align-items: flex-start; gap: 12px; transition: opacity 0.2s; }
 .item.done { opacity: 0.4; }
 .item.done .item-title { text-decoration: line-through; color: var(--muted); }
@@ -642,10 +644,10 @@ function rTodos(){
   const done=todos.filter(t=>t.completed).length;
   set2('tt',todos.length);set2('to',todos.length-done);set2('td',done);
   const pL={high:'🔴 Hoch',medium:'⚡ Mittel',low:'🟢 Niedrig'};
-  let list=todos;
-  if(tF==='open')list=todos.filter(t=>!t.completed);
-  else if(tF==='done')list=todos.filter(t=>t.completed);
-  else if(['high','medium','low'].includes(tF))list=todos.filter(t=>t.priority===tF);
+  let list=[...todos].sort((a,b)=>a.completed===b.completed?0:a.completed?1:-1);
+  if(tF==='open')list=list.filter(t=>!t.completed);
+  else if(tF==='done')list=list.filter(t=>t.completed);
+  else if(['high','medium','low'].includes(tF))list=list.filter(t=>t.priority===tF);
   const el=document.getElementById('todo-list');
   if(!list.length){el.innerHTML=emptyH('📝','Noch keine Aufgaben');return;}
   el.innerHTML=list.map(t=>`
@@ -682,9 +684,9 @@ async function delShop(id){await api('/rest/v1/shopping_items?id=eq.'+id,'DELETE
 function rShop(){
   const done=shopItems.filter(t=>t.completed).length;
   set2('st',shopItems.length);set2('so',shopItems.length-done);set2('sd',done);
-  let list=shopItems;
-  if(sF==='open')list=shopItems.filter(t=>!t.completed);
-  else if(sF==='done')list=shopItems.filter(t=>t.completed);
+  let list=[...shopItems].sort((a,b)=>a.completed===b.completed?0:a.completed?1:-1);
+  if(sF==='open')list=list.filter(t=>!t.completed);
+  else if(sF==='done')list=list.filter(t=>t.completed);
   const el=document.getElementById('shop-list');
   if(!list.length){el.innerHTML=emptyH('🛒','Liste ist leer');return;}
   el.innerHTML=list.map(t=>`
@@ -804,10 +806,10 @@ function rGTodos(){
   const done=gTodos.filter(t=>t.completed).length;
   set2('gtt',gTodos.length);set2('gto',gTodos.length-done);set2('gtd',done);
   const pL={high:'🔴 Hoch',medium:'⚡ Mittel',low:'🟢 Niedrig'};
-  let list=gTodos;
-  if(gtF==='open')list=gTodos.filter(t=>!t.completed);
-  else if(gtF==='done')list=gTodos.filter(t=>t.completed);
-  else if(['high','medium','low'].includes(gtF))list=gTodos.filter(t=>t.priority===gtF);
+  let list=[...gTodos].sort((a,b)=>a.completed===b.completed?0:a.completed?1:-1);
+  if(gtF==='open')list=list.filter(t=>!t.completed);
+  else if(gtF==='done')list=list.filter(t=>t.completed);
+  else if(['high','medium','low'].includes(gtF))list=list.filter(t=>t.priority===gtF);
   const el=document.getElementById('gtodo-list');
   if(!list.length){el.innerHTML=emptyH('📝','Noch keine Gruppenaufgaben');return;}
   el.innerHTML=list.map(t=>`
@@ -852,9 +854,9 @@ async function delGShop(id){await api('/rest/v1/group_shopping_items?id=eq.'+id,
 function rGShop(){
   const done=gShopItems.filter(t=>t.completed).length;
   set2('gst',gShopItems.length);set2('gso',gShopItems.length-done);set2('gsd',done);
-  let list=gShopItems;
-  if(gsF==='open')list=gShopItems.filter(t=>!t.completed);
-  else if(gsF==='done')list=gShopItems.filter(t=>t.completed);
+  let list=[...gShopItems].sort((a,b)=>a.completed===b.completed?0:a.completed?1:-1);
+  if(gsF==='open')list=list.filter(t=>!t.completed);
+  else if(gsF==='done')list=list.filter(t=>t.completed);
   const el=document.getElementById('gshop-list');
   if(!list.length){el.innerHTML=emptyH('🛒','Liste ist leer');return;}
   el.innerHTML=list.map(t=>`
